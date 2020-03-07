@@ -9,12 +9,22 @@ While investigating potentially suspicious domains and webpages, I have had the 
 
 This does all of that in a docker container, allowing you to mount a volume, keep the results, and destroy it.
 
+## Requirements
+
+- packages: python3, python3-pip, Java JDK (e.g. default-jdk on linux)
+- pip3: selemium browsermob-proxy
+
 ## Execution
-- Build: docker build -t website-parser . 
+- Local
 
-- Run: docker run -v ~/website-parser/output:/opt/parser/output --rm -it website-parser google.com
+    - python3 parse_page.py google.com
 
-    - Note: This sends results to ~/website-parser/output.  That can be changed as you see fit.
+- Docker container
+    - Build: docker build -t website-parser . 
+
+    - Run: docker run -v ~/website-parser/output:/opt/parser/output --rm -it website-parser google.com
+
+        - Note: This sends results to ~/website-parser/output.  That can be changed as you see fit.
 
 ## Output files, e.g. for google.com
 
