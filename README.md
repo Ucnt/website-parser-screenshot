@@ -39,7 +39,7 @@ This does all of that in a docker container, allowing you to mount a volume, kee
 
 - One technique is to 
     - Put this docker image on a VM in something like GCP/AWS
-    - Run the command with something like this alias 
+    - Run the command with something like this bash function call 
 
     ```
     function parse-screenshot (){
