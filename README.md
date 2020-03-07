@@ -30,7 +30,7 @@ This does all of that in a docker container, allowing you to mount a volume, kee
 - One technique is to 
     - Put this docker image on a VM in something like GCP/AWS
     - Run the command with something like this alias 
-    '''
+```
 function parse-screenshot (){
     echo "Parsing and getting screenshot for $1"
     # Scrape page
@@ -40,4 +40,4 @@ function parse-screenshot (){
     # Remove old scraped files
     ssh [VM_IP] bash -c "'sudo rm /tmp/output/*'"
 }
-'''
+```
