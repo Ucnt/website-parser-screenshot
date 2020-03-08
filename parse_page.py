@@ -49,17 +49,27 @@ def load_page(url):
             driver.get(url)            
 
     # Parse the HTML
-    with open('{}/{}.html'.format(output_dir, file_name), 'w+', encoding='utf-8') as save_html:
-        save_html.write(str(driver.page_source))
+    try:
+        with open('{}/{}.html'.format(output_dir, file_name), 'w+', encoding='utf-8') as save_html:
+            save_html.write(str(driver.page_source))
+    except Exception as e:
+        print("Error getting page source: {}".format(str(e)))
 
     # Get a screenshot with static size as pages will have different formats.
-    driver.set_window_size(1920, 2000)
-    driver.save_screenshot('{}/{}.png'.format(output_dir, file_name))
+    try:
+        driver.set_window_size(1920, 2000)
+        driver.save_screenshot('{}/{}.png'.format(output_dir, file_name))
+    except Exception as e:
+        print("Error getting screenshot: {}".format(str(e)))
 
     # Get the har data (e.g. resources it loads)
-    har_data = json.dumps(proxy.har, indent=4)
-    with open('{}/{}.har'.format(output_dir, file_name), 'w+') as save_har:
-        save_har.write(str(har_data))
+    try:
+        har_data = json.dumps(proxy.har, indent=4)
+        with open('{}/{}.har'.format(output_dir, file_name), 'w+') as save_har:
+            save_har.write(str(har_data))
+    except Exception as e:
+        print("Error getting har: {}".format(str(e)))
+
 
     # Kill everything...
     server.stop()
