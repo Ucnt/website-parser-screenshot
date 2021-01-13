@@ -27,22 +27,21 @@ def load_page(url):
     #Initialize a server/proxy for loading the page
     server = Server(browsermob_location)
     server.start()
-    proxy = server.create_proxy()
     profile = webdriver.FirefoxProfile()
-    profile.accept_untrusted_certs = True
-    profile.set_proxy(proxy.selenium_proxy())
+    #profile.accept_untrusted_certs = True
+    #profile.set_preference("general.useragent.override", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0")
     opts = Options()
     opts.set_headless()
     assert opts.headless
     driver = webdriver.Firefox(options=opts, firefox_profile=profile, executable_path=geckodriver_location)
-    proxy.new_har(url, options={'captureHeaders': True})
+    
 
     # Try to load the page
     try:
         driver.get(url)
     except Exception as e:
         print("Error during load of {}: {}".format(url, str(e).strip()))
-        # Be sure you try HTTP and HTTPS
+        # Be sure you try HTTP if HTTPS fails
         if "https://" not in url:
             url = url.replace("http://","https://")
             driver.get(url)
@@ -66,11 +65,16 @@ def load_page(url):
     # Get the har data (e.g. resources it loads)
     try:
         print("Getting HAR data")
+        proxy = server.create_proxy()
+        profile.set_proxy(proxy.selenium_proxy())
+        driver = webdriver.Firefox(options=opts, firefox_profile=profile, executable_path=geckodriver_location)
+        driver.get(url)
+        proxy.new_har(url, options={'captureHeaders': True})
         har_data = json.dumps(proxy.har, indent=4)
         with open('{}/{}.har'.format(output_dir, file_name), 'w+') as save_har:
             save_har.write(str(har_data))
     except Exception as e:
-        print("Error getting har: {}".format(str(e)))
+        print("Error getting har: {}".format(str(e).strip()))
 
 
     # Kill everything...
