@@ -39,14 +39,12 @@ def load_page(url):
     # Try to load the page
     try:
         driver.get(url)
-    except:
+    except Exception as e:
+        print("Error during load of {}: {}".format(url, str(e)))
         # Be sure you try HTTP and HTTPS
         if "https://" not in url:
             url = url.replace("http://","https://")
             driver.get(url)
-        else:
-            url = url.replace("https://","http://")
-            driver.get(url)            
 
     # Parse the HTML
     try:
