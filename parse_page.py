@@ -29,6 +29,7 @@ def load_page(url):
     server.start()
     proxy = server.create_proxy()
     profile = webdriver.FirefoxProfile()
+    profile.accept_untrusted_certs = True
     profile.set_proxy(proxy.selenium_proxy())
     opts = Options()
     opts.set_headless()
@@ -40,7 +41,7 @@ def load_page(url):
     try:
         driver.get(url)
     except Exception as e:
-        print("Error during load of {}: {}".format(url, str(e)))
+        print("Error during load of {}: {}".format(url, str(e).strip()))
         # Be sure you try HTTP and HTTPS
         if "https://" not in url:
             url = url.replace("http://","https://")
@@ -48,6 +49,7 @@ def load_page(url):
 
     # Parse the HTML
     try:
+        print("Getting HTML")        
         with open('{}/{}.html'.format(output_dir, file_name), 'w+', encoding='utf-8') as save_html:
             save_html.write(str(driver.page_source))
     except Exception as e:
@@ -55,6 +57,7 @@ def load_page(url):
 
     # Get a screenshot with static size as pages will have different formats.
     try:
+        print("Getting Screenshot")
         driver.set_window_size(1920, 2000)
         driver.save_screenshot('{}/{}.png'.format(output_dir, file_name))
     except Exception as e:
@@ -62,6 +65,7 @@ def load_page(url):
 
     # Get the har data (e.g. resources it loads)
     try:
+        print("Getting HAR data")
         har_data = json.dumps(proxy.har, indent=4)
         with open('{}/{}.har'.format(output_dir, file_name), 'w+') as save_har:
             save_har.write(str(har_data))
@@ -72,6 +76,8 @@ def load_page(url):
     # Kill everything...
     server.stop()
     driver.quit()
+
+    print("Done!")
 
 
 
